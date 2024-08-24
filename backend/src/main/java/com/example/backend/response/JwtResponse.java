@@ -12,6 +12,8 @@ public class JwtResponse {
     private String token;
     private String type = "Bearer";
     @NonNull
+    private Long userid;
+    @NonNull
     private String username;
 
 }

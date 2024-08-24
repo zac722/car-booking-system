@@ -89,7 +89,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<LocalDate> getUnavailableDates(Long carModelId, LocalDate startDate, LocalDate endDate) {
+    public List<LocalDate> getAvailableDates(Long carModelId, LocalDate startDate, LocalDate endDate) {
         CarModel carModel = carModelRepository.findById(carModelId)
                 .orElseThrow(() -> new InvalidDataException("Car model not found"));
 
@@ -113,18 +113,32 @@ public class CarServiceImpl implements CarService {
             }
         }
 
-        // If the number of occupied cars on a day is equal to the total number of cars,
-        // the day is unavailable
-        List<LocalDate> unavailableDates = new ArrayList<>();
+        // If the number of occupied cars on a day is less than the total number of
+        // cars,
+        // the day is available
+        List<LocalDate> availableDates = new ArrayList<>();
         LocalDate date = startDate;
         while (!date.isAfter(endDate)) {
-            if (dateOccupancy.getOrDefault(date, 0) >= cars.size()) {
-                unavailableDates.add(date);
+            if (dateOccupancy.getOrDefault(date, 0) < cars.size()) {
+                availableDates.add(date);
             }
             date = date.plusDays(1);
         }
 
-        return unavailableDates;
+        return availableDates;
+    }
+
+    @Override
+    public Map<Long, List<LocalDate>> getAllCarModelsAvailableDates(LocalDate startDate, LocalDate endDate) {
+        List<CarModel> carModels = carModelRepository.findAll();
+        Map<Long, List<LocalDate>> result = new HashMap<>();
+
+        for (CarModel carModel : carModels) {
+            List<LocalDate> availableDates = getAvailableDates(carModel.getId(), startDate, endDate);
+            result.put(carModel.getId(), availableDates);
+        }
+
+        return result;
     }
 
     @Override
@@ -141,6 +155,12 @@ public class CarServiceImpl implements CarService {
                 .orElseThrow(() -> new InvalidDataException("Booking not found"));
         booking.setStatus("Cancelled");
         bookingRepository.save(booking);
+    }
+
+    @Override
+    public Booking getBooking(Long bookingId) {
+        return bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new InvalidDataException("Booking not found"));
     }
 
     @Override

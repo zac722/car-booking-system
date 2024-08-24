@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -33,19 +34,33 @@ public class CarController {
         return ResponseEntity.ok(carModels);
     }
 
-    @GetMapping("/car-models/{carModelId}/unavailable-dates")
-    public ResponseEntity<List<LocalDate>> getUnavailableDates(
+    @GetMapping("/car-models/{carModelId}/available-dates")
+    public ResponseEntity<List<LocalDate>> getAvailableDates(
             @PathVariable Long carModelId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        List<LocalDate> unavailableDates = carService.getUnavailableDates(carModelId, startDate, endDate);
-        return ResponseEntity.ok(unavailableDates);
+        List<LocalDate> availableDates = carService.getAvailableDates(carModelId, startDate, endDate);
+        return ResponseEntity.ok(availableDates);
+    }
+
+    @GetMapping("/car-models/available-dates")
+    public ResponseEntity<Map<Long, List<LocalDate>>> getAllCarModelsAvailableDates(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        Map<Long, List<LocalDate>> availableDates = carService.getAllCarModelsAvailableDates(startDate, endDate);
+        return ResponseEntity.ok(availableDates);
     }
 
     @PostMapping("/bookings")
     public ResponseEntity<Booking> bookCar(@RequestBody BookingRequest request) {
         Booking booking = carService.bookCar(request.getUserId(), request.getCarModelId(),
                 request.getStartDate(), request.getEndDate());
+        return ResponseEntity.ok(booking);
+    }
+
+    @GetMapping("/bookings/{bookingId}")
+    public ResponseEntity<Booking> getBooking(@PathVariable Long bookingId) {
+        Booking booking = carService.getBooking(bookingId);
         return ResponseEntity.ok(booking);
     }
 
