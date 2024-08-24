@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import LoginView from '../views/LoginView.vue'
+import SignupView from '../views/SignupView.vue'
+import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,14 +13,49 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
+      path: '/login',
+      name: 'login',
+      component: LoginView
+    },
+    {
+      path: '/signup',
+      name: 'signup',
+      component: SignupView
+    },
+    {
+      path: '/book/:id?',
+      name: 'book',
+      component: () => import('../views/BookingView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/confirmation',
+      name: 'confirmation',
+      component: () => import('../views/BookingConfirmationView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/manage-bookings',
+      name: 'manageBookings',
+      component: () => import('../views/BookingManageView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/booking/:id',
+      name: 'bookingDetails',
+      component: () => import('../views/BookingDetailsView.vue'),
+      meta: { requiresAuth: true }
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    next('/login')
+  } else {
+    next()
+  }
 })
 
 export default router

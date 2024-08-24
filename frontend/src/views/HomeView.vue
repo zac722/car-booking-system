@@ -1,9 +1,7 @@
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
+import CarItem from '../components/CarItem.vue'
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <CarItem />
 </template>
