@@ -33,4 +33,8 @@ public class Car {
     @Column(length = 30)
     private String color;
 
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean isDeleted = false;
+
 }

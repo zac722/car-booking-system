@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,10 @@ import com.example.backend.exception.InvalidDataException;
 import com.example.backend.repository.BookingRepository;
 import com.example.backend.repository.CarModelRepository;
 import com.example.backend.repository.CarRepository;
-import com.example.backend.service.CarService;
+import com.example.backend.service.CarBookingService;
 
 @Service
-public class CarServiceImpl implements CarService {
+public class CarBookingServiceImpl implements CarBookingService {
 
     @Autowired
     private CarModelRepository carModelRepository;
@@ -39,7 +40,8 @@ public class CarServiceImpl implements CarService {
                 .map(car -> car.getModel().getId())
                 .distinct()
                 .collect(Collectors.toList());
-        return carModelRepository.findAllByIdIn(carModelIds);
+        return carModelRepository.findAllByIdIn(carModelIds).stream().filter(Predicate.not(CarModel::isDeleted))
+                .collect(Collectors.toList());
     }
 
     @Override

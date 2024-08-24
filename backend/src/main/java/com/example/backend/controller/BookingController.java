@@ -19,14 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backend.entity.Booking;
 import com.example.backend.entity.CarModel;
 import com.example.backend.request.BookingRequest;
-import com.example.backend.service.CarService;
+import com.example.backend.service.CarBookingService;
 
 @RestController
 @RequestMapping("/api")
-public class CarController {
+public class BookingController {
 
     @Autowired
-    private CarService carService;
+    private CarBookingService carService;
 
     @GetMapping("/cars")
     public ResponseEntity<List<CarModel>> getAllCarModels() {

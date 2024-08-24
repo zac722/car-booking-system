@@ -41,4 +41,8 @@ public class CarModel {
     @Column(length = 255)
     private String imageUrl;
 
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean isDeleted = false;
+
 }

@@ -7,7 +7,7 @@ import java.util.Map;
 import com.example.backend.entity.Booking;
 import com.example.backend.entity.CarModel;
 
-public interface CarService {
+public interface CarBookingService {
 
     public List<CarModel> getAllCarModelsWithCars();
 
