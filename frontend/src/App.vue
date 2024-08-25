@@ -10,7 +10,12 @@ import { RouterLink, RouterView } from 'vue-router'
       <v-btn to="/" variant="outlined" color="primary">Home</v-btn>
       <!-- <v-btn to="/book">Book a Car</v-btn> -->
       <v-btn to="/manage-bookings">Manage Bookings</v-btn>
-      <v-btn @click="logout" v-if="isAuthenticated">Logout</v-btn>
+      <template v-if="isAuthenticated">
+        <v-btn @click="logout">Logout</v-btn>
+      </template>
+      <template v-else>
+        <v-btn to="login">Login</v-btn>
+      </template>
     </v-app-bar>
 
     <v-main class="d-flex align-center justify-center">
