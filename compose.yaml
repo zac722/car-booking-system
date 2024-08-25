@@ -10,6 +10,8 @@ services:
       - POSTGRES_DB=${POSTGRES_DB} #optional (specify default database instead of $POSTGRES_DB)
     ports:
       - "5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     restart: always
     networks:
       - db
@@ -23,6 +25,8 @@ services:
     ports:
       - "5050:80"
     restart: always
+    networks:
+      - db
 
   backend:
     container_name: backend
@@ -35,7 +39,7 @@ services:
     depends_on:
       - postgres
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${BACKEND_DB}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PW}
     networks:
