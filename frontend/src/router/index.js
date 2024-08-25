@@ -63,14 +63,14 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next('/login')
-  }
   if (to.meta.requiresAdmin && !authStore.isAdmin) {
     to.matched[0].components.default = NotFoundView
     next()
+  } else if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    next('/login')
+  } else {
+    next()
   }
-  next()
 })
 
 export default router
