@@ -25,8 +25,10 @@ public class UserDetailsImpl implements UserDetails {
     @JsonIgnore
     private String password;
 
+    private boolean isAdmin;
+
     public static UserDetailsImpl build(User user) {
-        return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword());
+        return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword(), user.isAdmin());
     }
 
     @Override

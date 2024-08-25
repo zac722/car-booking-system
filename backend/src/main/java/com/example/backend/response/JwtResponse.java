@@ -15,5 +15,7 @@ public class JwtResponse {
     private Long userid;
     @NonNull
     private String username;
+    @NonNull
+    private Boolean admin;
 
 }
