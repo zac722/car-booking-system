@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   postgres:
     container_name: postgres
@@ -9,6 +11,8 @@ services:
     ports:
       - "5432:5432"
     restart: always
+    networks:
+      - db
 
   pgadmin:
     container_name: pgadmin
@@ -19,3 +23,40 @@ services:
     ports:
       - "5050:80"
     restart: always
+
+  backend:
+    container_name: backend
+    image: car-booking-system-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${BACKEND_DB}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PW}
+    networks:
+      - db
+      - api
+
+  frontend:
+    container_name: frontend
+    image: car-booking-system-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4173:4173"
+    depends_on:
+      - backend
+    networks:
+      - api
+
+networks:
+  db:
+    driver: bridge
+  api:
+    driver: bridge
