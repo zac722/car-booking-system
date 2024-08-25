@@ -39,7 +39,7 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthEntryPoint jwtAuthEntryPoint;
 
-    private static final String[] WHITE_LIST_URL = { "/signin", "/signup", "/api/**" };
+    private static final String[] WHITE_LIST_URL = { "/signin", "/signup", "/api/cars" };
 
     @Bean
     public JwtAuthenticationFilter authenticationTokenFilter() {
